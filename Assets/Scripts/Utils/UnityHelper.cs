@@ -5,6 +5,50 @@ namespace game
 {
 	public static class UnityHelper
 	{
+		public static float Min(float a, float b, float c)
+		{
+			return Mathf.Min(Math.Min(a, b), c);
+		}
+
+		public static float Max(float a, float b, float c)
+		{
+			return Mathf.Max(Math.Max(a, b), c);
+		}
+
+		public static int Min(int a, int b, int c)
+		{
+			return Mathf.Min(Math.Min(a, b), c);
+		}
+
+		public static int Max(int a, int b, int c)
+		{
+			return Mathf.Max(Math.Max(a, b), c);
+		}
+
+		public static int Clamp(int value, int min, int max)
+		{
+			if (value < min) return min;
+			if (value > max) return max;
+			return value;
+		}
+
+		public static int ModInt(int n, int m)
+		{
+			return ((n %= m) < 0) ? n + m : n;
+		}
+
+		// https://answers.unity.com/questions/380035/c-modulus-is-wrong-1.html
+		public static float Modf(float a, float b)
+		{
+			return a - b * Mathf.Floor(a / b);
+		}
+
+		// https://codereview.stackexchange.com/questions/57923/index-into-array-as-if-it-is-circular
+		public static int WrapAroundIndex(int index, int length)
+		{
+			return ((index % length) + length) % length;
+		}
+
 		public static float NormalizeAngle(float angleDegrees)
 		{
 			return NormalizeValue(angleDegrees, 0f, 360f);
@@ -54,24 +98,6 @@ namespace game
 			return angle;
 		}
 
-		public static int Modulo(int n, int m)
-		{
-			return ((n %= m) < 0) ? n + m : n;
-		}
-
-		// https://codereview.stackexchange.com/questions/57923/index-into-array-as-if-it-is-circular
-		public static int WrapAroundArray(int index, int length)
-		{
-			return ((index % length) + length) % length;
-		}
-
-		public static int Clamp(int value, int min, int max)
-		{
-			if (value < min) return min;
-			if (value > max) return max;
-			return value;
-		}
-
 		public static Vector2 ConvertWorldToScreenPoint(Vector3 worldPosition, Camera camera)
 		{
 			Vector2 screenPoint = camera.WorldToScreenPoint(worldPosition);
@@ -89,31 +115,12 @@ namespace game
 		// http://answers.unity3d.com/questions/799616/unity-46-beta-19-how-to-convert-from-world-space-t.html
 		public static Vector2 WorldToCanvasPosition(RectTransform canvas, Camera camera, Vector3 position)
 		{
-			// Vector position (percentage from 0 to 1) considering camera size.
-			// For example (0,0) is lower left, middle is (0.5,0.5)
 			Vector2 temp = camera.WorldToViewportPoint(position);
-
-			// Calculate position considering our percentage, using our canvas size
-			// So if canvas size is (1100,500), and percentage is (0.5,0.5), current value will be (550,250)
 			temp.x *= canvas.sizeDelta.x;
 			temp.y *= canvas.sizeDelta.y;
-
-			// The result is ready, but, this result is correct if canvas recttransform pivot is 0,0 - left lower corner.
-			// But in reality its middle (0.5,0.5) by default, so we remove the amount considering cavnas rectransform pivot.
-			// We could multiply with constant 0.5, but we will actually read the value, so if custom rect transform is passed(with custom pivot) ,
-			// returned value will still be correct.
-
 			temp.x -= canvas.sizeDelta.x * canvas.pivot.x;
 			temp.y -= canvas.sizeDelta.y * canvas.pivot.y;
-
 			return temp;
-		}
-
-		public static Collider2D CastRay2D(Vector3 screenPoint)
-		{
-			Ray ray = Camera.main.ScreenPointToRay(screenPoint);
-			RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction, Mathf.Infinity);
-			return hit.collider;
 		}
 
 		static private readonly float In2Cm = 1f / 2.54f;
@@ -187,7 +194,7 @@ namespace game
 
 		// https://stackoverflow.com/questions/29643352/converting-hex-to-rgb-value-in-python
 		static private readonly float ItoF = 1f / 255f;
-		public static Color ConvertHexColor(string hex, Color defaultColor)
+		public static Color ConvertHEXtoRGB(string hex, Color defaultColor)
 		{
 			if (string.IsNullOrEmpty(hex))
 			{
@@ -215,9 +222,102 @@ namespace game
 			}
 			catch (Exception)
 			{
+				return defaultColor;
 			}
+		}
 
-			return defaultColor;
+		public static string ConvertRGBtoHEX(Color color)
+		{
+			int r = (int)Mathf.Round(color.r * 255f);
+			int g = (int)Mathf.Round(color.g * 255f);
+			int b = (int)Mathf.Round(color.b * 255f);
+			return string.Format("{0:X2}{1:X2}{2:X2}", r, g, b);
+		}
+
+		// https://www.rapidtables.com/convert/color/rgb-to-hsl.html
+		static private readonly float Epsilon = 0.00001f;
+		public static void ConvertRGBtoHSL(Color color, out float h, out float s, out float l)
+		{
+			float min = UnityHelper.Min(color.r, color.g, color.b);
+			float max = UnityHelper.Max(color.r, color.g, color.b);
+
+			l = (max + min) / 2f;
+
+			float dx = max - min;
+			if (Mathf.Abs(dx) < Epsilon)
+			{
+				h = 0f;
+				s = 0f;
+			}
+			else
+			{
+				s = l <= 0.5f ? dx / (max + min) : dx / (2f - max - min);
+				if (color.r == max)
+				{
+					h = (color.g - color.b) / dx;
+				}
+				else if (color.g == max)
+				{
+					h = (color.b - color.r) / dx + 2f;
+				}
+				else
+				{
+					h = (color.r - color.g) / dx + 4f;
+				}
+
+				h = h * 60f;
+				if (h < 0f)
+				{
+					h += 360f;
+				}
+			}
+		}
+
+		// https://www.rapidtables.com/convert/color/hsl-to-rgb.html
+		public static Color ConvertHSLtoRGB(float h, float s, float l)
+		{
+			float c = (1f - Mathf.Abs(l * 2f - 1f)) * s;
+			float x = c * (1f - Mathf.Abs(Modf(h / 60f, 2f) - 1f));
+			float m = l - c / 2f;
+
+			float r, g, b;
+			if (h <= 60f)
+			{
+				r = c;
+				g = x;
+				b = 0;
+			}
+			else if (h < 120f)
+			{
+				r = x;
+				g = c;
+				b = 0;
+			}
+			else if (h < 180f)
+			{
+				r = 0;
+				g = c;
+				b = x;
+			}
+			else if (h < 240f)
+			{
+				r = 0;
+				g = x;
+				b = c;
+			}
+			else if (h < 300f)
+			{
+				r = x;
+				g = 0;
+				b = c;
+			}
+			else
+			{
+				r = c;
+				g = 0;
+				b = x;
+			}
+			return new Color(r + m, g + m, b + m);
 		}
 
 		public static void DumpSystemInfo()
