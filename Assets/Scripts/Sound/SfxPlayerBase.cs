@@ -66,30 +66,6 @@ namespace game
 		protected virtual void Start()
 		{
 			m_soundManager = GameObject.FindObjectOfType<SoundManager>();
-			RegisterMessages();
-		}
-
-		void OnDisable()
-		{
-			DeregisterMessages();
-		}
-
-		private void RegisterMessages()
-		{
-			MessageCenter center = GameContext.messageCenter;
-			center.AddListener<SoundMessage>(HandleSoundMessage);
-		}
-
-		private void DeregisterMessages()
-		{
-			MessageCenter center = GameContext.messageCenter;
-			center.RemoveListener<SoundMessage>(HandleSoundMessage);
-		}
-
-		private void HandleSoundMessage(IMessageProvider provider)
-		{
-			SoundMessage message = provider.GetMessage<SoundMessage>();
-			Play((int)message.sfxId);
 		}
 	}
 }
