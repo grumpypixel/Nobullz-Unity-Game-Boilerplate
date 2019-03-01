@@ -123,6 +123,15 @@ namespace game
 			return temp;
 		}
 
+		// https://stackoverflow.com/questions/45046256/move-ui-recttransform-to-world-position
+		public static Vector3 WorldToUISpace(Canvas parentCanvas, Vector3 worldPosition, Camera camera)
+		{
+			Vector3 screenPosition = camera.WorldToScreenPoint(worldPosition);
+			Vector2 movePosition;
+			RectTransformUtility.ScreenPointToLocalPointInRectangle(parentCanvas.transform as RectTransform, screenPosition, parentCanvas.worldCamera, out movePosition);
+			return parentCanvas.transform.TransformPoint(movePosition);
+		}
+
 		static private readonly float In2Cm = 1f / 2.54f;
 		public static float GetScreenPixelsPerCentimeter()
 		{
