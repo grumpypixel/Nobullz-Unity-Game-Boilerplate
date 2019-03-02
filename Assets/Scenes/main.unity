@@ -307,26 +307,5 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 683587592044913414, guid: 47553a373d5e04067a78b802ce60c7f2,
-        type: 3}
-      propertyPath: button.m_soundEffects.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 683587592044913414, guid: 47553a373d5e04067a78b802ce60c7f2,
-        type: 3}
-      propertyPath: button.m_soundEffects.Array.data[0]
-      value: 
-      objectReference: {fileID: 8300000, guid: bd9ea76354df6434c8942b32f25c1330, type: 3}
-    - target: {fileID: 5338193862997215135, guid: 47553a373d5e04067a78b802ce60c7f2,
-        type: 3}
-      propertyPath: fadeInTime
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5338193862997215135, guid: 47553a373d5e04067a78b802ce60c7f2,
-        type: 3}
-      propertyPath: fadeOutTime
-      value: 0.5
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 683587592044913414, guid: 47553a373d5e04067a78b802ce60c7f2, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 47553a373d5e04067a78b802ce60c7f2, type: 3}

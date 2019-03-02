@@ -12,11 +12,31 @@ namespace game
 		void Start()
 		{
 			RegisterMessages();
+			LoadGame();
 		}
 
 		void OnDisable()
 		{
 			DeregisterMessages();
+		}
+
+		private void LoadGame()
+		{
+			GameSettings gameSettings = GameContext.gameSettings;
+			GameContext.savegameManager.Load(gameSettings);
+
+			SetSoundVolume(gameSettings.soundVolume);
+		}
+
+		private void SaveGame()
+		{
+			GameSettings gameSettings = GameContext.gameSettings;
+			GameContext.savegameManager.Save(gameSettings);
+		}
+
+		private void SetSoundVolume(Volume volume)
+		{
+			GameContext.soundManager.muted = volume == Volume.Off;
 		}
 
 		private void RegisterMessages()

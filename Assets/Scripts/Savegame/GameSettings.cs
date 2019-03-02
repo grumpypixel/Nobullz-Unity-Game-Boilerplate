@@ -5,12 +5,11 @@ namespace game
 {
 	public class GameSettings : MonoBehaviour
 	{
-		public int highScore;
+		public int			highScore;
+		public Volume		soundVolume;
+		public Volume		musicVolume;
 
-		public Volume soundVolume;
-		public Volume musicVolume;
-
-		public GameSettings()
+		void Awake()
 		{
 			Reset();
 		}
