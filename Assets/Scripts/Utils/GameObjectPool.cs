@@ -108,7 +108,7 @@ namespace game
 					}
 				}
 
-				if (poolObject == null && count < this.maxObjects)
+				if (poolObject == null && (count < this.maxObjects || this.maxObjects == -1))
 				{
 					CreatePoolObjects(1);
 

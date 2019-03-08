@@ -20,7 +20,7 @@ It comes with the following basic tools:
 
 ## Dependencies
 
-- [Unity](https://unity3d.com/get-unity/download) version 2018.3.6f1 or higher
+- [Unity](https://unity3d.com/get-unity/download) version 2018.3.7f1 or higher
 
 ## How to use
 
