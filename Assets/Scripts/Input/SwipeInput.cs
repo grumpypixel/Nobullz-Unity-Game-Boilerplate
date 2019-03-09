@@ -45,6 +45,7 @@ namespace game
 
 		private float              m_pixelsPerCm = 1f;
 
+	#if UNITY_EDITOR
 		private Pair<KeyCode, SwipeDirection>[] m_swipeKeys = new Pair<KeyCode, SwipeDirection>[]
 		{
 			new Pair<KeyCode, SwipeDirection>(KeyCode.UpArrow, SwipeDirection.Up),
@@ -52,6 +53,7 @@ namespace game
 			new Pair<KeyCode, SwipeDirection>(KeyCode.DownArrow, SwipeDirection.Down),
 			new Pair<KeyCode, SwipeDirection>(KeyCode.LeftArrow, SwipeDirection.Left),
 		};
+	#endif
 
 		void Awake()
 		{

@@ -45,10 +45,6 @@ namespace game
 		}
 	}
 
-	public class EscapePressedMessage : Message
-	{
-	}
-
 	public class TouchInput : MonoBehaviour
 	{
 		private IMessageDispatcher m_messageDispatcher;
@@ -134,13 +130,6 @@ namespace game
 				}
 		#endif
 			}
-
-		#if UNITY_ANDROID
-			if (Input.GetKeyDown(KeyCode.Escape))
-			{
-				m_messageDispatcher.AddMessage<EscapePressedMessage>();
-			}
-		#endif
 		}
 
 		private void SendTouchBeganMessage(Vector2 position, int fingerId)
